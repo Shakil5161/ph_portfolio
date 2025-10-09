@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
-import { PostService } from "./blog.service";
+import { BlogService } from "./blog.service";
 
 
 const createBlog = async (req: Request, res: Response) => {
 
     try{
-        const result = await PostService.createBlog(req.body)
+        const result = await BlogService.createBlog(req.body)
         res.status(201).json({
             success: true,
             message: 'Blog created successfully',
@@ -34,13 +34,40 @@ const createBlog = async (req: Request, res: Response) => {
 }
 
 const updateBlog = async (req: Request, res: Response) => {
-    const post = await PostService.updateBlog(String(req.params.id), req.body);
-    res.json(post);
+  try {
+    const { id } = req.params;
+    const blog = await BlogService.updateBlog(id, req.body);
+
+    res.status(200).json({
+      success: true,
+      message: 'Blog updated successfully',
+      data: blog
+    });
+  } catch (error) {
+    if (error instanceof Error) {
+      if (error.message.includes('Record to update not found')) {
+        return res.status(404).json({
+          success: false,
+          error: 'Blog not found'
+        });
+      }
+      
+      return res.status(500).json({
+        success: false,
+        error: error.message
+      });
+    }
+    
+    res.status(500).json({
+      success: false,
+      error: "Internal server error"
+    });
+  }
 };
 
 const deleteBlog = async (req: Request, res: Response) => {
     try {
-        await PostService.deleteBlog(String(req.params.id));
+        await BlogService.deleteBlog(String(req.params.id));
         res.status(200).json({
             success: true,
             message: 'Blog deleted successfully'
@@ -80,7 +107,7 @@ const getAllBlog = async (req: Request, res: Response) => {
         const sortBy = (req.query.sortBy as string) || '';
         const sortOrder = (req.query.sortOrder as string) || ''
 
-        const result = await PostService.getAllBlog({page, limit, search, isFeatured, tags, sortBy, sortOrder})
+        const result = await BlogService.getAllBlog({page, limit, search, isFeatured, tags, sortBy, sortOrder})
         res.status(201).send(result)
     }
      catch (error) {
@@ -91,7 +118,7 @@ const getAllBlog = async (req: Request, res: Response) => {
 const getBlogById = async (req: Request, res: Response) => { 
     
     try {
-        const result = await PostService.getBlogById(String(req.params.id))
+        const result = await BlogService.getBlogById(String(req.params.id))
         res.status(201).send(result)
     } catch (error) {
         res.status(500).send(error)
@@ -103,7 +130,7 @@ const getBlogBySlug = async (req: Request, res: Response) => {
     try {
         const { slug } = req.params
         console.log(slug, 'slug')
-        const result = await PostService.getBlogBySlug(String(slug));
+        const result = await BlogService.getBlogBySlug(String(slug));
         if(!result){
             return res.status(404).json({
                 success: false,
@@ -134,7 +161,7 @@ const getBlogBySlug = async (req: Request, res: Response) => {
 
 
 
-export const PostController = {
+export const BlogController = {
     createBlog,
     getAllBlog,
     getBlogById,
