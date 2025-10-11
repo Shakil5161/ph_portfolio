@@ -1,6 +1,7 @@
+import dotenv from "dotenv";
 import http, { Server } from "http";
 import app from "./app";
-import dotenv from "dotenv";
+import { seedSuperAdmin } from "./utils/seedSuperAdmin";
 
 dotenv.config();
 
@@ -44,9 +45,7 @@ async function gracefulShutdown(signal: string) {
   }
 }
 
-/**
- * Handle system signals and unexpected errors.
- */
+
 function handleProcessEvents() {
   process.on("SIGTERM", () => gracefulShutdown("SIGTERM"));
   process.on("SIGINT", () => gracefulShutdown("SIGINT"));
@@ -62,5 +61,9 @@ function handleProcessEvents() {
   });
 }
 
-// Start the application
-startServer();
+
+(async () => {
+   await startServer()
+   await seedSuperAdmin()
+})()
+
