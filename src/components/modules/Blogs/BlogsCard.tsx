@@ -1,10 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import { extractTextFromLexical } from "@/app/helpers/lexicalParser";
 import { IBlog } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
 
 export default function BlogCard({ post }: { post: IBlog }) {
+
+  const plainText = extractTextFromLexical(post.content);
+
   return (
     <Link
       href={`/blogs/${post.id}`}
@@ -32,7 +36,7 @@ export default function BlogCard({ post }: { post: IBlog }) {
           </h3>
 
           <p className="text-gray-700 dark:text-gray-300 mb-4 line-clamp-3">
-            {post.content}
+            {plainText}
           </p>
 
           <div className="flex items-center justify-between mb-4">

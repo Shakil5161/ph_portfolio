@@ -1,13 +1,21 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { IBlog } from "@/types";
 import Image from "next/image";
+import LexicalRenderer from "./RichTextEditor/LexicalRenderer";
 
 export default async function BlogDetailsCard({ blog }: { blog: IBlog }) {
+
+
   if (!blog) {
     return (
       <div className="py-10 text-center text-gray-500">Blog not found.</div>
     );
   }
+
+    
+    
+
 
   return (
     <main className="max-w-4xl mx-auto py-20 px-4">
@@ -45,7 +53,8 @@ export default async function BlogDetailsCard({ blog }: { blog: IBlog }) {
       )}
 
       <article className="prose prose-lg max-w-none">
-        <p>{blog.content}</p>
+        <LexicalRenderer content={blog.content} />
+        
       </article>
     </main>
   );

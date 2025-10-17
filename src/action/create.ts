@@ -6,32 +6,41 @@ import { redirect } from "next/navigation"
 
 export const create = async(data: FormData) => {
     const blogInfo = Object.fromEntries(data.entries())
+    
     const session = await getUserSession()
-    const modifiedData = {
-        ...blogInfo,
-        tags: blogInfo.tags.toString().split(",").map((tag) => tag.trim()),
-        authorId: session?.user?.id,
-        isFeatured: Boolean(blogInfo.isFeatured)
+    
+    if (!session?.user?.id) {
+        throw new Error("User not authenticated");
     }
-    console.log(modifiedData)
 
+    const payload = {
+        title: blogInfo.title as string,
+        content: blogInfo.content as string,
+        excerpt: '', 
+        thumbnail: blogInfo.thumbnail as string,
+        tags: (blogInfo.tags as string).split(",").map((tag) => tag.trim()),
+        isPublished: true, 
+        authorId: Number(session.user.id), 
+        isFeatured: blogInfo.isFeatured === 'true' 
+    };
 
-     const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/post`,{
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/blog`, {
         method: "POST",
         headers: {
-            "Content-type": "application/json",
+            "Authorization": `Bearer ${session.token}`,
+            "Content-Type": "application/json" 
         },
-        body: JSON.stringify(modifiedData)
-     })
+        body: JSON.stringify(payload) // Send as JSON
+    });
 
-     const result = await res.json();
-
-     if(result.id){
+    const result = await res.json();
+    console.log(result, 'result')
+    
+    if(result.success){
         revalidateTag("BLOGS")
         revalidatePath("/blogs")
         redirect('/')
-     }
-
+    } else {
+        throw new Error(result.error || "Failed to create blog");
+    }
 }
-
-

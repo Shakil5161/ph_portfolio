@@ -5,9 +5,13 @@ import { create } from "@/action/create";
 import Form from "next/form";
 
 import { useState } from "react";
+import LexicalEditor from "./RichTextEditor/LexicalEditor";
+
+
 
 export default function CreateBlogForm() {
   const [isFeatured, setIsFeatured] = useState("false");
+    const [content, setContent] = useState("");
 
   return (
     <Form
@@ -30,17 +34,13 @@ export default function CreateBlogForm() {
       </div>
 
       {/* Content */}
-      <div>
+       <div>
         <label className="block text-sm font-medium mb-1" htmlFor="content">
           Content
         </label>
-        <textarea
-          id="content"
-          name="content"
-          rows={4}
-          className="w-full rounded-md border px-3 py-2 focus:ring focus:ring-blue-200"
-        />
+        <LexicalEditor name="content" value={content} onChange={setContent} />
       </div>
+      
 
       {/* Thumbnail */}
       <div>
