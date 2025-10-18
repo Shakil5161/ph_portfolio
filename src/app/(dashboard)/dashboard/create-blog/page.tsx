@@ -1,9 +1,10 @@
-import CreateBlogForm from "@/components/modules/Blogs/CreateBlogForm";
+import BlogForm from "@/components/modules/Blogs/BlogForm";
 
 const CreateBlog = () => {
   return (
     <div className="w-full flex justify-center items-center">
-      <CreateBlogForm/>
+      <h1>create blog</h1>
+      <BlogForm/>
     </div>
   );
 };

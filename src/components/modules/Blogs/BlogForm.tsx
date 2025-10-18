@@ -1,7 +1,7 @@
 "use client";
 
 
-import { create } from "@/action/create";
+import { createBlog } from "@/action/createBlog";
 import Form from "next/form";
 
 import { useState } from "react";
@@ -9,13 +9,13 @@ import LexicalEditor from "./RichTextEditor/LexicalEditor";
 
 
 
-export default function CreateBlogForm() {
+export default function BlogForm() {
   const [isFeatured, setIsFeatured] = useState("false");
     const [content, setContent] = useState("");
 
   return (
     <Form
-      action={create}
+      action={createBlog}
       className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-lg space-y-4 w-full"
     >
       <h2 className="text-xl font-semibold mb-4">Create Blog</h2>
@@ -107,3 +107,4 @@ export default function CreateBlogForm() {
     </Form>
   );
 }
+

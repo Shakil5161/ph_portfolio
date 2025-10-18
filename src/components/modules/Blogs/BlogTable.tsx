@@ -84,6 +84,9 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { cn } from "@/lib/utils"
+import { deleteBlogById } from "@/services/BlogServices"
+import { useRouter } from "next/navigation"
+import { toast } from "sonner"
 
 
 type Item = {
@@ -110,7 +113,7 @@ const multiColumnFilterFn: FilterFn<Item> = (row, columnId, filterValue) => {
         `${row.original.title} ${row.original.tags}`.toLowerCase();
   const searchTerm = (filterValue ?? "").toLowerCase()
   return searchableRowContent.includes(searchTerm)
-  console.log(columnId)
+  // console.log(columnId)
 }
 
 
@@ -135,17 +138,21 @@ const columns: ColumnDef<Item>[] = [
         aria-label="Select row"
       />
     ),
-    size: 28,
+    size: 20,
     enableSorting: false,
     enableHiding: false,
   },
   {
     header: "Name",
     accessorKey: "title",
-    cell: ({ row }) => (
-      <div className="font-medium">{row.getValue("title")}</div>
-    ),
-    size: 180,
+    cell: ({ row }) => {
+      const title = row.getValue("title") as string
+      const shortTitle = title.length > 100 ? `${title.slice(0, 100)}...` : title;
+      return (
+      <div className="font-medium">{shortTitle}</div>
+    )
+    },
+    size: 150,
     filterFn: multiColumnFilterFn,
     enableHiding: false,
   },
@@ -167,7 +174,7 @@ const columns: ColumnDef<Item>[] = [
       }
 
       // Limit to 100 characters
-      const shortText = text.length > 100 ? `${text.slice(0, 100)}...` : text;
+      const shortText = text.length > 80 ? `${text.slice(0, 80)}...` : text;
 
       return (
         <div className="text-sm text-muted-foreground line-clamp-2">
@@ -195,7 +202,7 @@ const columns: ColumnDef<Item>[] = [
         </Badge>
       );
     },
-    size: 120,
+    size: 80,
 
     // ✅ Add filtering support
     filterFn: (row, _columnId, value) => {
@@ -240,7 +247,7 @@ const columns: ColumnDef<Item>[] = [
         </div>
       );
     },
-    size: 220,
+    size: 100,
     filterFn: (row, columnId, value) => {
     // ✅ "value" will be true, false, or undefined
       if (value === "all" || value === undefined) return true;
@@ -258,7 +265,7 @@ const columns: ColumnDef<Item>[] = [
 ]
 
 export default function BlogTable({ data, isLoading }: BlogTableProps) {
-console.log("ata, isLoading ", data, isLoading )
+// console.log("ata, isLoading ", data, isLoading )
   const id = useId()
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
@@ -670,14 +677,17 @@ console.log("ata, isLoading ", data, isLoading )
 }
 
 function RowActions({ row }: { row: Row<Item> }) {
+   const router = useRouter();
 //   const navigate = useNavigate();
 //   const {data: userData} = useUserInfoQuery(undefined)
+  const blogTitle = row.original.title;
   const blogId = row.original.id;
   const blogSlug = row.original.slug;
   const [historyOpen, setHistoryOpen] = useState(false);
 console.log('userData from parcel table')
   const handleEdit = () => {
     console.log('handleEdit click')
+     router.push(`/dashboard/blog/edit/${blogId}`);
     // if( userData.data.role === "OWNER" 
     //   || userData.data.role === "ADMIN"
     // ){
@@ -688,8 +698,19 @@ console.log('userData from parcel table')
 
   };
 
-   const handleDeleteItem = () => {
-    console.log("delete handleDeleteItem")
+   const handleDeleteItem = async () => {
+    // console.log("delete handleDeleteItem", blogId);
+    try {
+      const result = await deleteBlogById(blogId)
+      if(result.success){
+        toast.success(result.message)
+        setHistoryOpen(false)
+      } else {
+        toast.error(result.message)
+      }
+    } catch (error: any) {
+      toast.error(error.message)
+    }
   }
 
   return (
@@ -727,9 +748,9 @@ console.log('userData from parcel table')
       <Dialog open={historyOpen} onOpenChange={setHistoryOpen}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Status History</DialogTitle>
+            <DialogTitle>Think Again 💭</DialogTitle>
             <DialogDescription>
-              Blog Slug: {blogSlug} {blogId}
+              Are you sure you want to delete: {blogTitle}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-2 max-h-64 overflow-y-auto">

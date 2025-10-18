@@ -4,7 +4,7 @@ import BlogTable from "@/components/modules/Blogs/BlogTable";
 const AllBlog = async () => {
     
     const allBlog = await GET()
-    console.log(allBlog, 'allblog')
+    // console.log(allBlog, 'allblog')
     return (
         <div>
             all blogs

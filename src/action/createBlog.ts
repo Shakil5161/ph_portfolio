@@ -4,7 +4,7 @@ import { getUserSession } from "@/app/helpers/getUserSession"
 import { revalidatePath, revalidateTag } from "next/cache"
 import { redirect } from "next/navigation"
 
-export const create = async(data: FormData) => {
+export const createBlog = async(data: FormData) => {
     const blogInfo = Object.fromEntries(data.entries())
     
     const session = await getUserSession()
@@ -12,18 +12,20 @@ export const create = async(data: FormData) => {
     if (!session?.user?.id) {
         throw new Error("User not authenticated");
     }
-
+console.log(blogInfo,'blogInfo from creat')
     const payload = {
         title: blogInfo.title as string,
         content: blogInfo.content as string,
         excerpt: '', 
         thumbnail: blogInfo.thumbnail as string,
-        tags: (blogInfo.tags as string).split(",").map((tag) => tag.trim()),
+        tags: blogInfo.tags
+  ? (blogInfo.tags as string).split(",").map((tag) => tag.trim())
+  : [],
         isPublished: true, 
         authorId: Number(session.user.id), 
         isFeatured: blogInfo.isFeatured === 'true' 
     };
-
+console.log(blogInfo, payload)
     const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/blog`, {
         method: "POST",
         headers: {
@@ -39,7 +41,7 @@ export const create = async(data: FormData) => {
     if(result.success){
         revalidateTag("BLOGS")
         revalidatePath("/blogs")
-        redirect('/')
+        redirect('/blogs')
     } else {
         throw new Error(result.error || "Failed to create blog");
     }
