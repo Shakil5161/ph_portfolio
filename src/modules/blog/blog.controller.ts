@@ -45,7 +45,7 @@ const updateBlog = async (req: Request, res: Response) => {
     });
   } catch (error) {
     if (error instanceof Error) {
-      if (error.message.includes('Record to update not found')) {
+      if (error.message.includes('Record not found to update')) {
         return res.status(404).json({
           success: false,
           error: 'Blog not found'
