@@ -26,13 +26,12 @@ const createBlog = async (payload: CreateBlogPayload): Promise<Blog> => {
     }
 
 
-
     const createPost = await prisma.blog.create({
         data: {
             title,
             slug,
             content,
-            excerpt: excerpt || content.substring(0, 150) + '...',
+            excerpt: excerpt || content.substring(0, 150) + '....',
             thumbnail,
             tags: tags || [],
             isPublished: isPublished || false,
