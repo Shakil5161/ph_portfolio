@@ -1,32 +1,24 @@
 "use client";
 
-import { updateBlog } from "@/action/updateBlog";
+import { updateBlog } from "@/action/blog/updateBlog";
+import { extractTextFromLexical } from "@/app/helpers/lexicalParser";
 import Form from "next/form";
-import { useEffect, useState } from "react";
-import LexicalEditor from "./RichTextEditor/LexicalEditor";
+import { useState } from "react";
+import LexicalEditor from "../RichTextEditor/LexicalEditor";
 
 interface EditBlogFormProps {
   blog: any;
 }
 
 export default function EditBlogForm({ blog }: EditBlogFormProps) {
-  const [content, setContent] = useState(blog?.content || "");
+    const blogContent = extractTextFromLexical(blog?.content);
+    console.log(blogContent,'blogContent')
+  const [content, setContent] = useState(blog?.content);
   const [isFeatured, setIsFeatured] = useState(
     blog?.isFeatured ? "true" : "false"
   );
 
-  // Preload Lexical content (if stored as JSON)
-  useEffect(() => {
-    if (blog?.content) {
-      try {
-        const parsed = JSON.parse(blog.content);
-        setContent(parsed);
-      } catch (error) {
-        console.error("Error parsing blog content:", error);
-        setContent(blog.content);
-      }
-    }
-  }, [blog]);
+  
 
   return (
     <Form

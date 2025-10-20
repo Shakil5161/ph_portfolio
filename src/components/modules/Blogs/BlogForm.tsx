@@ -1,17 +1,17 @@
 "use client";
 
 
-import { createBlog } from "@/action/createBlog";
+import { createBlog } from "@/action/blog/createBlog";
 import Form from "next/form";
 
 import { useState } from "react";
-import LexicalEditor from "./RichTextEditor/LexicalEditor";
+import LexicalEditor from "../RichTextEditor/LexicalEditor";
 
 
 
 export default function BlogForm() {
   const [isFeatured, setIsFeatured] = useState("false");
-    const [content, setContent] = useState("");
+  const [content, setContent] = useState("");
 
   return (
     <Form

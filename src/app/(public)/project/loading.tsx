@@ -1,6 +1,6 @@
 import Loading from "@/components/ui/Loading";
 
-const BlogLoading = () => {
+const ProjectLoading = () => {
     return (
         <div className='fixed inset-0 flex items-center justify-center'>
             <Loading/>
@@ -8,4 +8,4 @@ const BlogLoading = () => {
     );
 };
 
-export default BlogLoading;
+export default ProjectLoading;

@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Calendar, Home, Inbox, LogOut, PlusCircle, Search, Settings } from "lucide-react";
+import { FolderOpenDot, Home, Inbox, LogOut, PencilLine, PlusCircle, Search, Settings } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 
 import {
@@ -21,7 +21,8 @@ const items = [
   { title: "Home", url: "/", icon: Home },
   { title: "All Blog", url: "/dashboard/all-blog", icon: Inbox },
   { title: "Create Blog", url: "/dashboard/create-blog", icon: PlusCircle },
-  { title: "Calendar", url: "#", icon: Calendar },
+  { title: "All Project", url: "/dashboard/all-project", icon: FolderOpenDot },
+  { title: "Create Project", url: "/dashboard/create-project", icon: PencilLine },
   { title: "Search", url: "#", icon: Search },
   { title: "Settings", url: "#", icon: Settings },
 ];

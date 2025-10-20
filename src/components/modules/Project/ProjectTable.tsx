@@ -32,6 +32,7 @@ import {
 } from "lucide-react"
 import { useId, useRef, useState } from "react"
 
+import { deleteProject } from "@/action/project/deleteProject"
 import { extractTextFromLexical } from "@/app/helpers/lexicalParser"
 import {
   AlertDialog,
@@ -84,23 +85,24 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { cn } from "@/lib/utils"
-import { deleteBlogById } from "@/services/BlogServices"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 
 type Item = {
-  id: string
-  title: string
-  slug: string
-  content: string
-  location: string
-  thumbnail?: string
-  views: number
-  tags: string[]
-  isPublished?: boolean // Added missing field
+  id: string;
+  title: string;
+  slug: string;
+  description: string;
+  image?: string;
+  liveUrl?: string;
+  githubUrl?: string;
+  videoUrl?: string;
+  featured: boolean;
+  techStack: string[];
+  content?: string; // Added content field for description
 }
 
-type BlogTableProps = {
+type ProjectTableProps = {
   data: Item[];
   isLoading?: boolean;
   error?: any;
@@ -109,7 +111,7 @@ type BlogTableProps = {
 // Custom filter function for multi-column searching
 const multiColumnFilterFn: FilterFn<Item> = (row, columnId, filterValue) => {
   const searchableRowContent =
-        `${row.original.title} ${row.original.tags?.join(' ')}`.toLowerCase();
+        `${row.original.title} ${row.original.techStack?.join(' ')}`.toLowerCase();
   const searchTerm = (filterValue ?? "").toLowerCase()
   return searchableRowContent.includes(searchTerm)
 }
@@ -180,36 +182,57 @@ const columns: ColumnDef<Item>[] = [
     size: 300,
   },
   {
-    header: "Published",
-    accessorKey: "isPublished",
+    header: "Live Link",
+    accessorKey: "liveUrl",
     cell: ({ row }) => {
-      const published = row.getValue("isPublished") as boolean;
+      const liveUrl = row.getValue("liveUrl") as string;
+      return (
+        <div className="min-w-[100px] max-w-[150px]">
+          {liveUrl ? (
+            <a 
+              href={liveUrl} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-blue-600 hover:text-blue-800 truncate block text-sm"
+              title={liveUrl}
+            >
+              {liveUrl.length > 20 ? `${liveUrl.slice(0, 20)}...` : liveUrl}
+            </a>
+          ) : (
+            <span className="text-muted-foreground text-sm">No link</span>
+          )}
+        </div>
+      )
+    },
+    size: 150,
+  },
+  {
+    header: "Featured",
+    accessorKey: "featured",
+    cell: ({ row }) => {
+      const featured = row.getValue("featured") as boolean;
       return (
         <div className="min-w-[80px] max-w-[100px]">
           <Badge
             className={cn(
               "px-2 py-1 text-xs font-medium rounded-md truncate",
-              published
+              featured
                 ? "bg-green-100 text-green-800"
-                : "bg-red-100 text-red-800"
+                : "bg-yellow-100 text-yellow-800"
             )}
           >
-            {published ? "Published" : "Draft"}
+            {featured ? "Featured" : "Default"}
           </Badge>
         </div>
       );
     },
     size: 100,
-    filterFn: (row, columnId, value) => {
-      if (value === "all" || value === undefined) return true;
-      return row.getValue(columnId) === value;
-    },
   },
   {
-    header: "Tags",
-    accessorKey: "tags",
+    header: "Tech Stack",
+    accessorKey: "techStack",
     cell: ({ row }) => {
-      const tags = row.getValue("tags") as string[] || [];
+      const tags = row.getValue("techStack") as string[] || [];
 
       const tagColors: Record<string, string> = {
         "React": "bg-blue-100 text-blue-800",
@@ -221,6 +244,10 @@ const columns: ColumnDef<Item>[] = [
         "TypeScript": "bg-sky-100 text-sky-800",
         "GraphQL": "bg-pink-100 text-pink-800",
         "Firebase": "bg-orange-100 text-orange-800",
+        "PostgreSQL": "bg-blue-100 text-blue-800",
+        "Tailwind CSS": "bg-cyan-100 text-cyan-800",
+        "Redis": "bg-red-100 text-red-800",
+        "Socket.io": "bg-purple-100 text-purple-800",
       };
 
       return (
@@ -258,7 +285,7 @@ const columns: ColumnDef<Item>[] = [
   },
 ]
 
-export default function BlogTable({ data, isLoading }: BlogTableProps) {
+export default function ProjectTable({ data, isLoading }: ProjectTableProps) {
   const id = useId()
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
@@ -333,22 +360,12 @@ export default function BlogTable({ data, isLoading }: BlogTableProps) {
             )}
           </div>
           
-          {/* Published Filter */}
+          {/* Featured Filter */}
           <Popover>
             <PopoverTrigger asChild>
               <Button variant="outline" className="whitespace-nowrap">
                 <FilterIcon className="me-1 opacity-60" size={16} aria-hidden="true" />
                 Status
-                {table.getColumn("isPublished")?.getFilterValue() !== undefined &&
-                  table.getColumn("isPublished")?.getFilterValue() !== "all" && (
-                    <span className="bg-background text-muted-foreground/70 -me-1 ms-2 inline-flex h-5 max-h-full items-center rounded border px-1 font-[inherit] text-[0.625rem] font-medium">
-                      {
-                        table.getColumn("isPublished")?.getFilterValue() === true
-                          ? "Published"
-                          : "Draft"
-                      }
-                    </span>
-                  )}
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-48 p-3" align="start">
@@ -357,15 +374,15 @@ export default function BlogTable({ data, isLoading }: BlogTableProps) {
                 <div className="space-y-2">
                   {[
                     { label: "All", value: "all" },
-                    { label: "Published", value: true },
-                    { label: "Draft", value: false },
+                    { label: "Featured", value: true },
+                    { label: "Default", value: false },
                   ].map(({ label, value }) => (
                     <div key={String(value)} className="flex items-center gap-2">
                       <Checkbox
-                        checked={table.getColumn("isPublished")?.getFilterValue() === value}
+                        checked={table.getColumn("featured")?.getFilterValue() === value}
                         onCheckedChange={() =>
-                          table.getColumn("isPublished")?.setFilterValue(
-                            table.getColumn("isPublished")?.getFilterValue() === value ? undefined : value
+                          table.getColumn("featured")?.setFilterValue(
+                            table.getColumn("featured")?.getFilterValue() === value ? undefined : value
                           )
                         }
                       />
@@ -491,7 +508,7 @@ export default function BlogTable({ data, isLoading }: BlogTableProps) {
         </div>
       </div>
 
-      {/* Pagination */}
+      {/* Pagination - Same as before */}
       <div className="flex items-center justify-between gap-8 flex-wrap">
         <div className="flex items-center gap-3">
           <Label htmlFor={id} className="max-sm:sr-only">Rows per page</Label>
@@ -553,22 +570,25 @@ export default function BlogTable({ data, isLoading }: BlogTableProps) {
   )
 }
 
+// RowActions component remains the same
 function RowActions({ row }: { row: Row<Item> }) {
   const router = useRouter();
-  const blogTitle = row.original.title;
-  const blogId = row.original.id;
+  const projectTitle = row.original.title;
+  const projectSlug = row.original.slug;
+  const projectId = row.original.id;
   const [historyOpen, setHistoryOpen] = useState(false);
 
   const handleEdit = () => {
-    router.push(`/dashboard/blog/edit/${blogId}`);
+    router.push(`/dashboard/project/edit/${projectSlug}`);
   };
   const handleView = () => {
-    router.push(`/blogs/${blogId}`);
+    router.push(`/project/${projectSlug}`);
   };
 
   const handleDeleteItem = async () => {
+    console.log("delete handleDeleteItem", projectId);
     try {
-      const result = await deleteBlogById(blogId)
+      const result = await deleteProject(projectId)
       if(result.success){
         toast.success(result.message)
         setHistoryOpen(false)
@@ -607,7 +627,7 @@ function RowActions({ row }: { row: Row<Item> }) {
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>Think Again 💭</DialogTitle>
-            <DialogDescription>Are you sure you want to delete: {blogTitle}</DialogDescription>
+            <DialogDescription>Are you sure you want to delete: {projectTitle}</DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <DialogClose asChild><Button variant="outline">Cancel</Button></DialogClose>

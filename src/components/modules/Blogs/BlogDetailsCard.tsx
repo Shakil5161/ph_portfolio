@@ -2,7 +2,7 @@
 
 import { IBlog } from "@/types";
 import Image from "next/image";
-import LexicalRenderer from "./RichTextEditor/LexicalRenderer";
+import LexicalRenderer from "../RichTextEditor/LexicalRenderer";
 
 export default async function BlogDetailsCard({ blog }: { blog: IBlog }) {
 
@@ -12,10 +12,6 @@ export default async function BlogDetailsCard({ blog }: { blog: IBlog }) {
       <div className="py-10 text-center text-gray-500">Blog not found.</div>
     );
   }
-
-    
-    
-
 
   return (
     <main className="max-w-4xl mx-auto py-20 px-4">

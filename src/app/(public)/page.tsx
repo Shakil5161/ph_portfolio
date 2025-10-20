@@ -9,7 +9,7 @@ export default async function HomePage() {
 
   const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/blog`,{
     next: {
-        tags:["Blogs"]
+        tags:["BLOGS"]
     }
   });
 

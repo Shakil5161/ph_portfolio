@@ -45,3 +45,24 @@ export interface IProject {
   updatedAt: Date;
   views: number;
 }
+
+export interface Project {
+  id: string;
+  title: string;
+  slug: string;
+  description: string;
+  image?: string;
+  liveUrl?: string;
+  githubUrl?: string;
+  videoUrl?: string;
+  featured: boolean;
+  techStack: string[];
+  views: number;
+}
+
+export interface ProjectsSectionProps {
+  projects: Project[];
+  title?: string;
+  description?: string;
+  showFilters?: boolean;
+}

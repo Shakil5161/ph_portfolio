@@ -1,21 +1,20 @@
 "use client";
 
+import { CodeNode } from "@lexical/code";
+import { AutoLinkNode, LinkNode } from "@lexical/link";
+import { ListItemNode, ListNode } from "@lexical/list";
 import {
   InitialConfigType,
   LexicalComposer,
 } from "@lexical/react/LexicalComposer";
+import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { ContentEditable } from "@lexical/react/LexicalContentEditable";
 import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary";
 import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
 import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
-
-import { CodeNode } from "@lexical/code";
-import { AutoLinkNode, LinkNode } from "@lexical/link";
-import { ListItemNode, ListNode } from "@lexical/list";
 import { HeadingNode, QuoteNode } from "@lexical/rich-text";
-
-import { useState } from "react";
+import { useEffect, useRef } from "react";
 import ToolbarPlugin from "./ToolbarPlugin";
 
 interface RichTextEditorProps {
@@ -24,13 +23,32 @@ interface RichTextEditorProps {
   onChange?: (value: string) => void;
 }
 
+
+function LoadDefaultContentPlugin({ value }: { value?: string }) {
+  const [editor] = useLexicalComposerContext();
+  const hasLoaded = useRef(false);
+
+  useEffect(() => {
+    if (!value || hasLoaded.current) return;
+    hasLoaded.current = true;
+
+    try {
+      const parsed = JSON.parse(value);
+      const editorState = editor.parseEditorState(parsed);
+      editor.setEditorState(editorState);
+    } catch (err) {
+      console.error("❌ Failed to load default Lexical content:", err);
+    }
+  }, [editor, value]);
+
+  return null;
+}
+
 export default function RichTextEditor({
   name,
-  value = "",
+  value,
   onChange,
 }: RichTextEditorProps) {
-  const [initialContent] = useState(value);
-
   const editorConfig: InitialConfigType = {
     namespace: "NextBlogEditor",
     theme: {
@@ -49,7 +67,15 @@ export default function RichTextEditor({
       },
     },
     onError: (error: Error) => console.error("Lexical Error:", error),
-    nodes: [HeadingNode, QuoteNode, ListNode, ListItemNode, LinkNode, AutoLinkNode, CodeNode],
+    nodes: [
+      HeadingNode,
+      QuoteNode,
+      ListNode,
+      ListItemNode,
+      LinkNode,
+      AutoLinkNode,
+      CodeNode,
+    ],
   };
 
   return (
@@ -62,11 +88,18 @@ export default function RichTextEditor({
             contentEditable={
               <ContentEditable className="min-h-[250px] p-3 focus:outline-none prose dark:prose-invert max-w-none" />
             }
-            placeholder={<div className="text-gray-400">Start writing your content...</div>}
+            placeholder={
+              <div className="text-gray-400">
+                Start writing your content...
+              </div>
+            }
             ErrorBoundary={LexicalErrorBoundary}
           />
 
           <HistoryPlugin />
+
+          {/* Load initial JSON only once */}
+          <LoadDefaultContentPlugin value={value} />
 
           <OnChangePlugin
             onChange={(editorState) => {
@@ -78,7 +111,7 @@ export default function RichTextEditor({
           />
         </div>
 
-        <input type="hidden" name={name} value={value} />
+        <input type="hidden" name={name} value={value || ""} />
       </LexicalComposer>
     </div>
   );
