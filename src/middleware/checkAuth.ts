@@ -1,4 +1,4 @@
-// middleware/auth.middleware.ts
+
 import { NextFunction, Request, Response } from 'express';
 import { verifyToken } from '../utils/verifyToken';
 

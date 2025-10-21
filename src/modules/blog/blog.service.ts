@@ -69,7 +69,6 @@ const getAllBlog = async ({page, limit, search, isFeatured, tags, sortBy, sortOr
         ].filter(Boolean)
     }
 
-     // Validate sortBy field to prevent injection
   const allowedSortFields = ["title", "createdAt", "updatedAt", "isFeatured"];
   const validSortBy = allowedSortFields.includes(sortBy as string) ? sortBy : "createdAt";
   const validSortOrder = sortOrder === "asc" ? "asc" : "desc";

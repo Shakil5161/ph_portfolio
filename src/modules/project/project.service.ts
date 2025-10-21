@@ -3,7 +3,7 @@ import { Prisma, Project } from "@prisma/client";
 import { prisma } from "../../config/db";
 import { generateSlug } from "../../utils/generateSlug";
 
-// Types
+
 export type CreateProjectPayload = Omit<Prisma.ProjectCreateInput, 'slug'> & {
   techStack?: string[];
 };

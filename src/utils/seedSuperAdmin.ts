@@ -8,7 +8,7 @@ export const seedSuperAdmin = async () => {
         
         const adminEmail = 'shakil@portfolio.com'
         
-        // Check if admin already exists
+        
         const existingAdmin = await prisma.user.findUnique({
             where: { email: adminEmail }
         })

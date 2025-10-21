@@ -27,13 +27,12 @@ app.use("/api/v1/blog", blogRoute)
 app.use("/api/v1/project", projectRoutes)
 
 app.use("/api/v1/auth", authRoute);
-// Default route for testing
+
 app.get("/", (_req, res) => {
   res.send("Portfolio API is running");
 });
 
 
-// 404 Handler
 app.use((req, res, next) => {
   res.status(404).json({
     success: false,

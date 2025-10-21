@@ -1,7 +1,7 @@
 
 import { Request, Response } from 'express';
 import { ProjectService } from './project.service';
-// Create Project
+
 const createProject = async (req: Request, res: Response) => {
   try {
     const project = await ProjectService.createProject(req.body);
