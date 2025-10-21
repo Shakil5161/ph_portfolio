@@ -113,7 +113,7 @@ const updateProject = async (id: string, payload: UpdateProjectPayload): Promise
   
   const data: Prisma.ProjectUpdateInput = { ...rest };
 
-  // Regenerate slug if title is being updated
+
   if (title) {
     data.slug = generateSlug(title);
     data.title = title;
