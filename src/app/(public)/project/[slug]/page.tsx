@@ -38,11 +38,8 @@ export default async function ProjectDetailPage({
   const project = await getProject(params.slug);
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900">
-      
-<div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        
-      </div>
+    <div className="min-h-screen bg-white pt-35 dark:bg-gray-900">
+    
   
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 pb-16">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
