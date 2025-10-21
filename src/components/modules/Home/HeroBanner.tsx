@@ -116,7 +116,7 @@ export function HeroBanner() {
               }}
               transition={{ type: "spring", stiffness: 300 }}
             >
-              Your Name
+              Shakil Ahmed
             </motion.span>
           </motion.h1>
 
