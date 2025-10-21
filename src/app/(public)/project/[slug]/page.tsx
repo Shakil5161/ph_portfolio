@@ -2,7 +2,6 @@
 import { getProject } from '@/app/api/project/route';
 import LexicalRenderer from '@/components/modules/RichTextEditor/LexicalRenderer';
 import {
-  ArrowLeft,
   Calendar,
   ExternalLink,
   Eye,
@@ -10,7 +9,6 @@ import {
   Play
 } from 'lucide-react';
 import Image from 'next/image';
-import Link from 'next/link';
 
 interface Project {
   id: string;
@@ -41,21 +39,14 @@ export default async function ProjectDetailPage({
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
-      {/* Back Button */}
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <Link
-          href="/project"
-          className="inline-flex items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors mb-8"
-        >
-          <ArrowLeft size={20} />
-          Back to Projects
-        </Link>
+      
+<div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        
       </div>
-
-      {/* Hero Section */}
+  
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 pb-16">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          {/* Project Image/Video */}
+         
           <div className="relative">
             {project.videoUrl ? (
               <div className="relative aspect-video rounded-2xl overflow-hidden bg-gray-200 dark:bg-gray-800">
@@ -89,25 +80,25 @@ export default async function ProjectDetailPage({
             )}
           </div>
 
-          {/* Project Info */}
+          
           <div className="space-y-6">
-            {/* Featured Badge */}
+           
             {project.featured && (
               <span className="inline-flex items-center gap-1 bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 px-3 py-1 rounded-full text-sm font-medium">
                 ⭐ Featured Project
               </span>
             )}
 
-            {/* Title */}
+           
             <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white">
               {project.title}
             </h1>
 
-            {/* Description */}
+            
             
              <LexicalRenderer content={project.description} />
 
-            {/* Stats */}
+            
             <div className="flex items-center gap-6 text-sm text-gray-500 dark:text-gray-400">
               <div className="flex items-center gap-1">
                 <Calendar size={16} />
@@ -125,7 +116,7 @@ export default async function ProjectDetailPage({
               </div>
             </div>
 
-            {/* Tech Stack */}
+           
             <div>
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
                 Technologies Used
@@ -142,7 +133,7 @@ export default async function ProjectDetailPage({
               </div>
             </div>
 
-            {/* Action Buttons */}
+            
             <div className="flex flex-wrap gap-4 pt-4">
               {project.liveUrl && (
                 <a
@@ -183,7 +174,7 @@ export default async function ProjectDetailPage({
           </div>
         </div>
 
-        {/* Project Content */}
+      
         {project.content && (
           <div className="mt-16 max-w-4xl mx-auto">
             <div className="prose prose-lg dark:prose-invert max-w-none">
@@ -200,23 +191,6 @@ export default async function ProjectDetailPage({
   );
 }
 
-// // Generate static paths for ISR
-// export async function generateStaticParams() {
-//   const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/project`, {
-//     next: { revalidate: 3600 } // Revalidate every hour
-//   });
-  
-//   if (!res.ok) {
-//     return [];
-//   }
-  
-//   const data = await res.json();
-//   const projects = data.data || [];
-  
-//   return projects.map((project: Project) => ({
-//     slug: project.slug,
-//   }));
-// }
 
 export async function generateMetadata({ params }: { params: { slug: string } }) {
   const project = await getProject(params.slug);

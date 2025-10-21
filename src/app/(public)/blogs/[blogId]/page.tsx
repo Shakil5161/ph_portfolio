@@ -7,21 +7,17 @@
 import BlogDetailsCard from "@/components/modules/Blogs/BlogDetailsCard";
 import { getBlogById } from "@/services/BlogServices";
 
-//   return blogs.slice(0,5).map((blog: IBlog) =>  ({
-//     blogId: String(blog.id)
-//   }))
-// }
 
-// export const generateMetadata = async ({params}: {params: Promise<{blogId: string}>}) => {
-//     const {blogId} = await params;
+export const generateMetadata = async ({params}: {params: Promise<{blogId: string}>}) => {
+    const {blogId} = await params;
 
-//     const blog = await getBlogById(blogId);
+    const blog = await getBlogById(blogId);
 
-//     return{
-//       title: blog?.title,
-//       description: blog?.content
-//     }
-// }
+    return{
+      title: blog?.title,
+      description: blog?.content
+    }
+}
 
 const BlogsDetailsPage = async ({params}: {params: Promise<{blogId: string}>}) => {
 

@@ -4,7 +4,7 @@ import { Metadata } from "next";
 
 
 export const metadata: Metadata = {
-  title: "All Blogs | Next Blogs"
+  title: "All Blogs"
 }
 
 const AllBlogsPage = async () => {

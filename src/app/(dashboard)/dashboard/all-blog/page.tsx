@@ -2,6 +2,8 @@ import { GET } from "@/app/api/blogs/route";
 import BlogTable from "@/components/modules/Blogs/BlogTable";
 
 const AllBlog = async () => {
+
+   
     
     const allBlog = await GET()
     // console.log(allBlog, 'allblog')

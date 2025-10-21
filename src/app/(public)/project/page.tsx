@@ -1,4 +1,3 @@
-// app/projects/page.tsx
 
 import ProjectsSection from "@/components/modules/Project/ProjectsSection";
 
@@ -35,7 +34,7 @@ export default async function ProjectsPage() {
 
   return (
     <main>
-      {/* Hero Section */}
+      
       <section className="bg-gradient-to-br from-blue-600 to-purple-700 text-white py-20">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-5xl lg:text-6xl font-bold mb-6">
@@ -58,6 +57,6 @@ export default async function ProjectsPage() {
 }
 
 export const metadata = {
-  title: 'Projects | Your Name',
+  title: 'My Projects',
   description: 'Explore my portfolio of web applications and projects',
 };
