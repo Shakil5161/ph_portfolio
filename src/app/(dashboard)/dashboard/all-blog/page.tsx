@@ -7,7 +7,7 @@ const AllBlog = async () => {
     // console.log(allBlog, 'allblog')
     return (
         <div>
-            all blogs
+            
             <div className=" py-10 px-5">
             <BlogTable data={allBlog}/>
             </div>

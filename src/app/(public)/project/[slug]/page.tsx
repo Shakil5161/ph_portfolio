@@ -65,6 +65,7 @@ export default async function ProjectDetailPage({
                   className="w-full h-full object-cover"
                   poster={project.image}
                 />
+                
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
               </div>
             ) : project.image ? (
