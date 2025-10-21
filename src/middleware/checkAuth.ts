@@ -31,7 +31,7 @@ export const authMiddleware = async (req: AuthenticatedRequest, res: Response, n
   }
 };
 
-// Optional: Admin middleware for role-based access
+
 export const adminMiddleware = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
   try {
     if (!req.user) {
@@ -41,14 +41,6 @@ export const adminMiddleware = async (req: AuthenticatedRequest, res: Response, 
       });
     }
 
-    // You can add role checking here if you have multiple roles
-    // const user = await AuthService.getCurrentUser(req.user.userId);
-    // if (user.role !== 'OWNER' && user.role !== 'ADMIN') {
-    //   return res.status(403).json({
-    //     success: false,
-    //     error: "Access denied. Insufficient permissions."
-    //   });
-    // }
 
     next();
   } catch (error) {
