@@ -1,5 +1,4 @@
 "use client";
-
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -43,7 +42,7 @@ export default function LoginForm() {
       setLoading(true);
       setError("");
 
-      console.log("Attempting login with:", values.email); // Debug log
+      
 
       const result = await signIn("credentials", {
         email: values.email,
@@ -52,7 +51,7 @@ export default function LoginForm() {
         callbackUrl: callbackUrl,
       });
 
-      console.log("SignIn result:", result); // Debug log
+      
 
       if (result?.error) {
         setError("Invalid email or password");
@@ -60,10 +59,10 @@ export default function LoginForm() {
       } else if (result?.ok) {
         // Verify session was created
         const session = await getSession();
-        console.log("Session after login:", session); // Debug log
+        
         
         if (session) {
-          console.log("Login successful, redirecting to:", callbackUrl);
+          
           router.push(callbackUrl);
           router.refresh(); // Refresh to update auth state
         } else {

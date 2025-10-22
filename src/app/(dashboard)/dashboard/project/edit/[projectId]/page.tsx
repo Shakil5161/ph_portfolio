@@ -16,14 +16,14 @@ export default function EditProjectPage() {
   const [error, setError] = useState('');
 
   const {projectId} = params
-console.log(params, 'params')
+  
   useEffect(() => {
     const fetchProject = async () => {
       try {
         setLoading(true);
         const result = await getProject(projectId as string)
         
-        console.log( result, 'result', )
+        
         if (result.id) {
           setProject(result);
         } else {

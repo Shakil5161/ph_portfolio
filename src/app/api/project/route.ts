@@ -29,5 +29,5 @@ export async function getProject(slug: string): Promise<IProject> {
 
   const data = await res.json();
   return data.data;
-  console.log(data, 'data')
+  
 }

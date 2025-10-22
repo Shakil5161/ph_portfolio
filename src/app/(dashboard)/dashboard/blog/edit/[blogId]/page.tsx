@@ -16,14 +16,13 @@ export default function EditBlogPage() {
   const [error, setError] = useState('');
 
   const {blogId} = params ;
-console.log(blogId,'id')
+  
   useEffect(() => {
     const fetchBlog = async () => {
       try {
         setLoading(true);
         const result = await getBlogById(blogId as string)
         
-        console.log( result, 'result', blogId, 'blogId')
         if (result.id) {
           setBlog(result);
         } else {

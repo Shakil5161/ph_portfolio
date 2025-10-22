@@ -13,7 +13,6 @@ export const createProject = async(data: FormData) => {
         throw new Error("User not authenticated");
     }
 
-    console.log(projectInfo,'projectInfo from create')
 
     let techStack: string[] = [];
     try {
@@ -34,7 +33,7 @@ export const createProject = async(data: FormData) => {
         techStack: techStack, 
     };
 
-    console.log('Final payload:', payload)
+    
 
     const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/project`, {
         method: "POST",
@@ -46,7 +45,7 @@ export const createProject = async(data: FormData) => {
     });
 
     const result = await res.json();
-    console.log(result, 'result')
+    
     
     if(result.success){
         revalidateTag("PROJECT")

@@ -63,7 +63,7 @@ export const authOptions: NextAuthOptions = {
           const user = data?.data?.user;
           const token = data?.data?.token;
 
-          console.log("Backend Response:", data); // Debug log
+          
 
           if (user?.id && token) {
             return {

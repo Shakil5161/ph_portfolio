@@ -37,7 +37,6 @@ Lexical - Rich text editor
 
 React Quill - Alternative rich text editor
 
-Cloudinary - Image and video management
 
 Development Tools
 ESLint - Code linting
@@ -76,6 +75,7 @@ portfolio-frontend/
 ├── types/                 # TypeScript type definitions
 ├── public/                # Static assets
 └── styles/                # Additional styles
+
 🚀 Pages & Routes
 Public Routes
 Page	Route	Description

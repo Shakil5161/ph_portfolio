@@ -21,7 +21,7 @@ export async function POST(request: Request){
         const formData = await request.formData();
 
     const token = request.headers.get('authorization')?.replace('Bearer ', '');
-console.log(formData,'formData', token, 'token')
+    
     if(!token){
         return NextResponse.json(
             { success: false, error: "Authentication required" },

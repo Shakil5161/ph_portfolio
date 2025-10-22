@@ -586,7 +586,7 @@ function RowActions({ row }: { row: Row<Item> }) {
   };
 
   const handleDeleteItem = async () => {
-    console.log("delete handleDeleteItem", projectId);
+    
     try {
       const result = await deleteProject(projectId)
       if(result.success){

@@ -23,8 +23,6 @@ export const updateBlog = async (data: FormData) => {
     isPublished: true,
   };
 
-  console.log("🟡 updateBlog payload:", payload);
-  console.log("🟡 updateBlog id:", blogInfo.id);
 
   try {
     const res = await fetch(
@@ -40,7 +38,7 @@ export const updateBlog = async (data: FormData) => {
     );
 
     const result = await res.json();
-    console.log("🟢 Update API Response:", result);
+   
 
     if (result.success) {
       revalidateTag("BLOGS");
@@ -49,8 +47,10 @@ export const updateBlog = async (data: FormData) => {
     } else {
       throw new Error(result.error || "Failed to update blog");
     }
-  } catch (err: any) {
-    console.error("🔴 Update error:", err);
+  } 
+  
+  catch (err: any) {
+    
     if (err.message?.includes('NEXT_REDIRECT')) {
       throw err; // Re-throw redirect errors
     }

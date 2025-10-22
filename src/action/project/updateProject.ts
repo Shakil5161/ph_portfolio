@@ -14,7 +14,7 @@ export const updateProject = async(data: FormData) => {
         throw new Error("User not authenticated");
     }
 
-    console.log(projectInfo,'projectInfo from update')
+    
 
     
     let techStack: string[] = [];
@@ -38,7 +38,7 @@ export const updateProject = async(data: FormData) => {
         
     };
 
-    console.log('Update payload:', payload)
+  
 
     try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/project/${projectInfo.id}`, {
@@ -51,7 +51,7 @@ export const updateProject = async(data: FormData) => {
     });
 
     const result = await res.json();
-    console.log(result, 'result')
+   
     
         if(result.success){
             revalidateTag("PROJECT")

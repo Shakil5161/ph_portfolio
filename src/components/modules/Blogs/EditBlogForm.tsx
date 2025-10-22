@@ -12,7 +12,7 @@ interface EditBlogFormProps {
 
 export default function EditBlogForm({ blog }: EditBlogFormProps) {
     const blogContent = extractTextFromLexical(blog?.content);
-    console.log(blogContent,'blogContent')
+    
   const [content, setContent] = useState(blog?.content);
   const [isFeatured, setIsFeatured] = useState(
     blog?.isFeatured ? "true" : "false"

@@ -12,7 +12,7 @@ export const createBlog = async(data: FormData) => {
     if (!session?.user?.id) {
         throw new Error("User not authenticated");
     }
-console.log(blogInfo,'blogInfo from creat')
+    
     const payload = {
         title: blogInfo.title as string,
         content: blogInfo.content as string,
@@ -25,7 +25,7 @@ console.log(blogInfo,'blogInfo from creat')
         authorId: Number(session.user.id), 
         isFeatured: blogInfo.isFeatured === 'true' 
     };
-console.log(blogInfo, payload)
+    
     const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/blog`, {
         method: "POST",
         headers: {
@@ -36,7 +36,7 @@ console.log(blogInfo, payload)
     });
 
     const result = await res.json();
-    console.log(result, 'result')
+    
     
     if(result.success){
         revalidateTag("BLOGS")

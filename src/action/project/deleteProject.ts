@@ -28,8 +28,9 @@ export const deleteProject = async (id: string) => {
 
         }
 
-    } catch (error: any) {
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : String(error);
         console.error('Delete blog error:', error);
-        return { success: false, error: error.message };
+        return { success: false, error: message };
     }
 }

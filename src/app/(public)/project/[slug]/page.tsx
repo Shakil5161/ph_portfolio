@@ -34,7 +34,7 @@ export default async function ProjectDetailPage({
 }: { 
   params: { slug: string } 
 }) {
-    console.log(params.slug, 'params.slug',params)
+  
   const project = await getProject(params.slug);
 
   return (
