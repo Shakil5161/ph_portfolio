@@ -8,17 +8,23 @@ import { userRoute } from "./modules/user/user.routes";
 
 const app = express();
 
+
+// CORS Configuration
+const corsOptions = {
+  origin: [
+    "http://localhost:3000",  
+    "https://my-portfolio-jet-rho-49.vercel.app/",
+  ],
+  credentials: true,
+  optionsSuccessStatus: 200
+};
+
 // Middleware
 app.use(cors()); 
 app.use(compression()); 
 app.use(express.json()); 
 
-app.use(
-  cors({
-    origin: "http://localhost:3000",
-    credentials: true,
-  })
-);
+app.use(cors(corsOptions)); 
 
 app.use("/api/v1/user", userRoute)
 
